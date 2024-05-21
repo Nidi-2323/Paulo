@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Componente1 from './Componente1';
 const AirQualityScreen = () => {  
 
-  const [city, setCity] = useState('Puebla');
+  const [city, setCity] = useState('');
   const [aqi, setAqi] = useState(0);
   const [source, setSource] = useState('SNICA');
   const [station, setStation] = useState('Conocida');
@@ -20,12 +20,12 @@ const AirQualityScreen = () => {
   const [wg, setWg] = useState(0);
   const [time, setTime] = useState('2024-05-17 00:00:00');
   const [scale, setScale] = useState(['primary','desconocida','Por determinar']);
-
+  
 
 
     const token='d735699d24a8d8f860a7d6b9e21ba6a7084c711b';
-    const getAQI = async () =>  {
-        const url = `https://api.waqi.info/feed/here/?token=${ token }`;
+    const getAQI = async (ciudad) =>  {
+        const url = `https://api.waqi.info/feed/${ciudad}/?token=${ token }`;
         const response = await fetch(url);
         const data = await response.json();  
         console.log(data);
@@ -86,7 +86,7 @@ const AirQualityScreen = () => {
 
     //useEffect para traer los datos
 useEffect(() => {
-    getAQI();
+    getAQI(city);
 }, [])
 
     //
@@ -95,6 +95,51 @@ useEffect(() => {
 
   return (
     <>
+
+    <div className="content">
+      <div className='row'>
+          <div className='col-12'>
+              <div className='card card-primary'>
+                <div className='card-body'>
+                    <div className='form-group'>
+                      <label>Buscar</label>
+                      <input 
+                        type='text' 
+                        className='form-control ' 
+                        placeholder='Buscar'
+                        onChange={e=>setCity(e.target.value)}
+                      />
+                    </div>
+                </div>
+                <div className="card-footer">
+                    <button className='btn bg-purple btn-lg' onClick={()=>setAqi(city)}>
+                      Aceptar</button>
+                </div>
+              </div>
+          </div>
+      </div>
+
+    </div>
+
+      <div><a href={source.url}target='blank' title='Ir al sitio'>{source.name}{time} </a>
+      </div>
+       <div className='card card-info'>
+            <div >
+
+            </div>
+         </div>
+
+
+
+
+
+
+
+
+
+
+
+
     <div> Aplicacion para la Calidad del aire <p> <a href={source.url} target='_blank' title='Ir al sitio'>  { source.name }  </a></p> </div>
 
     <div className='card card-info'>
@@ -102,6 +147,9 @@ useEffect(() => {
         <div className='card-header'>
           <h4 className='card-title'> { city } </h4>
         </div>
+
+
+
         <div className='card-body'>
 
         <div className='row'>
